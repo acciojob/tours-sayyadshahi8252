@@ -1,11 +1,7 @@
-import React from 'react'
+import React from "react";
 
-const Loading = () => {
-  return (
-    <div style={{display:"flex",justifyContent:"center",alignItems:"center"}}>
-      <h1 style={{color:"green"}}>Loading...</h1>
-    </div>
-  )
+function Loading() {
+  return <h2>Loading...</h2>;
 }
 
-export default Loading
+export default Loading;

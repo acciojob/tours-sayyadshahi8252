@@ -1,66 +1,56 @@
-import React, { useEffect, useState } from "react";
-import Loading from './Loading'
-import Tours from './Tours'
+import React, { useState, useEffect } from "react";
+import Loading from "./Loading";
+import Tours from "./Tours";
 
-const App = () => {
-  let[loading,setLoading]=useState(false)
-  let[tours,setTours]=useState([])
+const url = "https://course-api.com/react-tours-project";
 
+function App() {
+  const [loading, setLoading] = useState(true);
+  const [tours, setTours] = useState([]);
 
-  function fetchTours() {
-    setLoading(true)
-    const url = 'https://www.course-api.com/react-tours-project';
-
-    fetch(url)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`Response status: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then(data => {
-        setTours(data)
-        console.log(data);   
-        setLoading(false)
-      })
-      .catch(error => {
-        console.error(error.message);
-        setLoading(false)
-      });
-  }
+  const fetchTours = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(url);
+      const data = await res.json();
+      setTours(data);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     fetchTours();
   }, []);
 
-  const removerTours=(id)=>{
-    const newTour=tours.filter((tour)=> tour.id !== id)
-    setTours(newTour)
-  }
+  const removeTour = (id) => {
+    const newTours = tours.filter((tour) => tour.id !== id);
+    setTours(newTours);
+  };
 
-
-
-  if(loading){
-    return(
-      <main style={{display:"flex",justifyContent:"center",alignItems:"center",width:"100vw",height:"100vh"}}>
-          <Loading/>
+  if (loading) {
+    return (
+      <main>
+        <Loading />
       </main>
-    )
+    );
   }
-    if(tours.length===0){
-    return(
-       <main>
+
+  if (tours.length === 0) {
+    return (
+      <main>
         <h2>No Tours Left</h2>
         <button onClick={fetchTours}>Refresh</button>
       </main>
-    )
+    );
   }
 
   return (
-    <main id="main">
-      <Tours tours={tours} remove={removerTours} />
+    <main>
+      <Tours tours={tours} removeTour={removeTour} />
     </main>
   );
-};
+}
 
 export default App;
